@@ -4,6 +4,7 @@
 
   <groupId>tika-xps</groupId>
   <artifactId>tika-xps</artifactId>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
   <name>OOXML XPS Parser for Apache Tika</name>
   <url>http://www.mydlp.com/blog/</url>
