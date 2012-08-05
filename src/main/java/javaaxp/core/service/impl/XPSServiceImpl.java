@@ -20,15 +20,30 @@
 package javaaxp.core.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javaaxp.core.service.IXPSAccess;
 import javaaxp.core.service.IXPSService;
 import javaaxp.core.service.XPSError;
 
 public class XPSServiceImpl implements IXPSService {
+	
+	protected static IXPSService instance = new XPSServiceImpl();
+	
+	public static IXPSService getInstance() {
+		return instance;
+	}
+	
 	@Override
-	public IXPSAccess getXPSAccess(File f) throws XPSError {
-		return new XPSFileAccessImpl(f);
+	public IXPSAccess getXPSAccess(InputStream inputStream) throws XPSError {
+		return new XPSFileAccessImpl(inputStream);
+	}
+
+	@Override
+	public IXPSAccess getXPSAccess(File xpsFile) throws XPSError, FileNotFoundException {
+		return getXPSAccess(new FileInputStream(xpsFile));
 	}
 
 }

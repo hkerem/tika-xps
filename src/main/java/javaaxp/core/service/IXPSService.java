@@ -20,7 +20,12 @@
 package javaaxp.core.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public interface IXPSService {
-	public IXPSAccess getXPSAccess(File xpsFile) throws XPSError;
+	
+	public IXPSAccess getXPSAccess(File xpsFile) throws XPSError, FileNotFoundException;
+
+	public IXPSAccess getXPSAccess(InputStream inputStream) throws XPSError;
 }

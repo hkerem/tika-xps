@@ -22,6 +22,11 @@ package javaaxp.core.service;
 
 public class XPSSpecError extends XPSError {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3079380287906060473L;
+
 	public XPSSpecError(int i, int j, String string) {
 		super("XPS Spec Violation: " + i + "." + j + ": " + string);
 	}

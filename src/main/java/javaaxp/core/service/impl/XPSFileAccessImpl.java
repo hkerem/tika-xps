@@ -19,7 +19,7 @@
 
 package javaaxp.core.service.impl;
 
-import java.io.File;
+import java.io.InputStream;
 
 import javaaxp.core.service.IXPSAccess;
 import javaaxp.core.service.IXPSDocumentAccess;
@@ -36,9 +36,9 @@ public class XPSFileAccessImpl implements IXPSAccess {
 
 	IXPSFileAccess fFileAccess;
 
-	public XPSFileAccessImpl(File file) throws XPSError {
+	public XPSFileAccessImpl(InputStream inputStream) throws XPSError {
 		super();
-		fFileAccess = new XPSZipFileAccess(file);
+		fFileAccess = new XPSZipFileAccess(inputStream);
 	}
 
 	public IXPSDocumentAccess getDocumentAccess() {

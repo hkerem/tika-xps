@@ -22,6 +22,11 @@ package javaaxp.core.service;
 
 public class XPSError extends Exception {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 12476991678403752L;
+
 	public XPSError(String string) {
 		super(string);
 	}

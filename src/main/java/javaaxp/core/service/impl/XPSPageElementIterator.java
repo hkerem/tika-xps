@@ -20,7 +20,6 @@
 package javaaxp.core.service.impl;
 
 import javaaxp.core.service.DelegatingResourceDictionary;
-import javaaxp.core.service.IXPSAccess;
 import javaaxp.core.service.IXPSFileAccess;
 import javaaxp.core.service.IXPSIterator;
 import javaaxp.core.service.IXPSVisitor;

@@ -22,6 +22,11 @@ package javaaxp.core.service;
 
 public class LinkTargetNotFoundException extends XPSError {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6497351672140102831L;
+
 	public LinkTargetNotFoundException(String target) {
 		super("Link target " + target + " not found");
 	}

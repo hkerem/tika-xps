@@ -25,6 +25,7 @@ import javaaxp.core.service.XPSSpecError;
 
 public class FontResourceDirectory {
 
+	@SuppressWarnings("unused")
 	private static final int BYTE_INDEX_MAP[] = new int[] {
 		3, 2, 1, 0,
 		5,4,
