@@ -21,15 +21,12 @@
 backenddir = $(datadir)/mydlp/backend
 
 backend_DATA = \
-	target/tika-xps-1.0.0.jar
+	target/tika-xps.jar
 
-target/tika-xps-1.0.0: pom.xml
+target/tika-xps.jar: pom.xml
 	@$(MVN) install
+	cp -af target/tika-xps-1.0.0.jar target/tika-xps.jar
 
 clean-local:
 	@$(MVN) clean
-
-install-data-hook:
-	mkdir -p $(DESTDIR)$(backenddir) && \
-		ln -s tika-xps-1.0.0.jar $(DESTDIR)$(backenddir)/tika-xps.jar
 
