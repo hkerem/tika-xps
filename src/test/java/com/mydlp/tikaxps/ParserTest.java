@@ -25,11 +25,14 @@ public class ParserTest extends TestCase {
 			fail(xpsFile.getName() + " does not exists.");
 		InputStream inputStream = new FileInputStream(xpsFile);
 		String FileName = xpsFile.getName();
-		String MimeType = "application/vnd.ms-xpsdocument";
 		Metadata metadata = new Metadata();
 		if (FileName != null && FileName.length() > 0)
 			metadata.add(Metadata.RESOURCE_NAME_KEY, FileName);
+		String MimeType = tika.detect(inputStream, metadata);
+		assertEquals("application/vnd.ms-xpsdocument", MimeType);
 		metadata.add(Metadata.CONTENT_TYPE, MimeType);
+		inputStream.close();
+		inputStream = new FileInputStream(xpsFile);
 		Reader reader = tika.parse(inputStream, metadata);
 		String content = IOUtils.toString(reader);
 		assertTrue(content.contains("4111 1111 1111 1111"));
