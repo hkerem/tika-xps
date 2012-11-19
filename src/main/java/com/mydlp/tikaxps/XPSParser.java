@@ -12,6 +12,7 @@ import javaaxp.core.service.XPSError;
 import javaaxp.core.service.impl.XPSServiceImpl;
 import javaaxp.core.service.impl.document.jaxb.CTCanvas;
 import javaaxp.core.service.impl.document.jaxb.CTGlyphs;
+import javaaxp.core.service.impl.document.jaxb.CTPath;
 import javaaxp.core.service.model.document.page.IFixedPage;
 
 import org.apache.tika.exception.TikaException;
@@ -93,6 +94,9 @@ public class XPSParser implements Parser {
     		CTGlyphs c = (CTGlyphs) xpsObj;
     		String text = c.getUnicodeString();
     		xhtmlParagraph(text);
+    	}
+    	else if (xpsObj instanceof CTPath)
+    	{
     	}
     	else
     	{
