@@ -24,7 +24,11 @@ import org.apache.tika.sax.XHTMLContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
+
+
 public class XPSParser implements Parser {
+	
+	private double currentXPosition = 0;
 	
     /**
 	 * 
@@ -92,8 +96,14 @@ public class XPSParser implements Parser {
     	else if (xpsObj instanceof CTGlyphs)
     	{
     		CTGlyphs c = (CTGlyphs) xpsObj;
+    		if (c.getOriginX() < currentXPosition) {
+    			fileXHTML.startElement("div");
+                fileXHTML.characters(" ");
+                fileXHTML.endElement("div");
+    		}
     		String text = c.getUnicodeString();
-    		xhtmlParagraph(text);
+            xhtmlParagraph(text);
+            currentXPosition = c.getOriginX();
     	}
     	else if (xpsObj instanceof CTPath)
     	{
@@ -121,9 +131,9 @@ public class XPSParser implements Parser {
     }
     
     private void xhtmlParagraph(String text) throws SAXException {
-    	fileXHTML.startElement("p");
+    	fileXHTML.startElement("span");
         fileXHTML.characters(text);
-        fileXHTML.endElement("p");
+        fileXHTML.endElement("span");
     }
     
     /**
