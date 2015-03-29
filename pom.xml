@@ -4,7 +4,7 @@
 
   <groupId>tika-xps</groupId>
   <artifactId>tika-xps</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
   <name>OOXML XPS Parser for Apache Tika</name>
   <url>http://www.mydlp.com/blog/</url>
@@ -12,7 +12,8 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -23,17 +24,17 @@
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.2</version>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-parsers</artifactId>
-      <version>1.2</version>
+      <version>1.7</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
-      <version>1.4.1</version>
+      <version>1.8</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
