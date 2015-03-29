@@ -28,20 +28,26 @@ import org.xml.sax.SAXException;
 
 public class XPSParser implements Parser {
 	
-	private double currentXPosition = 0;
-	
+
     /**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3528366722867144747L;
 
-    private static final Set<MediaType> SUPPORTED_TYPES = 
+    private static final Set<MediaType> SUPPORTED_TYPES =
             Collections.singleton(MediaType.application("vnd.ms-xpsdocument"));
-    
+
     private static final String XPS_MIME_TYPE = "application/vnd.ms-xpsdocument";
 
-	private XHTMLContentHandler fileXHTML;
-    
+    private static class XPSContext {
+	    public XHTMLContentHandler fileXHTML;
+	    public double currentXPosition = 0;
+
+        public XPSContext(XHTMLContentHandler fileXHTML) {
+            this.fileXHTML = fileXHTML;
+        }
+    }
+
     public Set<MediaType> getSupportedTypes(ParseContext context) {
         return SUPPORTED_TYPES;
     }
@@ -51,19 +57,18 @@ public class XPSParser implements Parser {
             Metadata metadata, ParseContext context)
     throws IOException, SAXException, TikaException {
     	metadata.set(Metadata.CONTENT_TYPE, XPS_MIME_TYPE);
-    	
-        fileXHTML = new XHTMLContentHandler(handler, metadata);
+
+        XPSContext xpsContext = new XPSContext(new XHTMLContentHandler(handler, metadata));
         try {
-			parseXPS(stream);
+			parseXPS(xpsContext, stream);
 		} catch (XPSError e) {
 			throw new IOException(e);
 		}
-        stream.close();
     }
     
-    private void parseXPS(InputStream inputStream) throws XPSError, SAXException {
+    private void parseXPS(XPSContext xpsContext, InputStream inputStream) throws XPSError, SAXException {
     	IXPSAccess xpsAccess = XPSServiceImpl.getInstance().getXPSAccess(inputStream);
-    	xhtmlStartDocument();
+    	xhtmlStartDocument(xpsContext.fileXHTML);
     	int firstDocNum = xpsAccess.getDocumentAccess().getFirstDocNum();
     	int lastDocNum = xpsAccess.getDocumentAccess().getLastDocNum();
     	for (int i = firstDocNum; i <= lastDocNum; i++)
@@ -74,63 +79,64 @@ public class XPSParser implements Parser {
     		for (int j = firstPageNum; j <= lastPageNum; j++)
     		{
     			IFixedPage fixedPage = xpsPageAccess.getPage(j);
-    			parseObjs(fixedPage.getPathOrGlyphsOrCanvas());
+    			parseObjs(xpsContext, fixedPage.getPathOrGlyphsOrCanvas());
     		}
     	}
-    	xhtmlEndDocument();
+    	xhtmlEndDocument(xpsContext.fileXHTML);
     }
     
-    private void parseObjs(List<Object> objs) throws XPSError, SAXException {
-    	for (Object o : objs)
-    		parseObj(o);
+    private void parseObjs(XPSContext xpsContext, List<Object> objs) throws XPSError, SAXException {
+    	for (Object o : objs) {
+            parseObj(xpsContext, o);
+        }
     }
     
-    private void parseObj(Object xpsObj) throws XPSError, SAXException {
+    private void parseObj(XPSContext xpsContext, Object xpsObj) throws XPSError, SAXException {
     	if (xpsObj instanceof CTCanvas)
     	{
     		CTCanvas c = (CTCanvas) xpsObj;
-    		xhtmlStartCanvas();
-    		parseObjs(c.getPathOrGlyphsOrCanvas());
-    		xhtmlEndCanvas();
+    		xhtmlStartCanvas(xpsContext.fileXHTML);
+    		parseObjs(xpsContext, c.getPathOrGlyphsOrCanvas());
+    		xhtmlEndCanvas(xpsContext.fileXHTML);
     	}
     	else if (xpsObj instanceof CTGlyphs)
     	{
     		CTGlyphs c = (CTGlyphs) xpsObj;
-    		if (c.getOriginX() < currentXPosition) {
-    			fileXHTML.startElement("div");
-                fileXHTML.characters(" ");
-                fileXHTML.endElement("div");
+    		if (c.getOriginX() < xpsContext.currentXPosition) {
+                xpsContext.fileXHTML.startElement("div");
+                xpsContext.fileXHTML.characters(" ");
+                xpsContext.fileXHTML.endElement("div");
     		}
     		String text = c.getUnicodeString();
-            xhtmlParagraph(text);
-            currentXPosition = c.getOriginX();
+            xhtmlParagraph(xpsContext.fileXHTML, text);
+            xpsContext.currentXPosition = c.getOriginX();
     	}
     	else if (xpsObj instanceof CTPath)
     	{
     	}
     	else
     	{
-    		System.out.println("Unhandled type : " + xpsObj.getClass().getCanonicalName());
+    		//System.out.println("Unhandled type : " + xpsObj.getClass().getCanonicalName());
     	}
     }
     
-    private void xhtmlStartDocument() throws SAXException {
+    private void xhtmlStartDocument(XHTMLContentHandler fileXHTML) throws SAXException {
     	fileXHTML.startDocument();
     }
     
-    private void xhtmlEndDocument() throws SAXException {
+    private void xhtmlEndDocument(XHTMLContentHandler fileXHTML) throws SAXException {
     	fileXHTML.endDocument();
     }
     
-    private void xhtmlStartCanvas() throws SAXException {
+    private void xhtmlStartCanvas(XHTMLContentHandler fileXHTML) throws SAXException {
     	fileXHTML.startElement("div");
     }
     
-    private void xhtmlEndCanvas() throws SAXException {
+    private void xhtmlEndCanvas(XHTMLContentHandler fileXHTML) throws SAXException {
     	fileXHTML.endElement("div");
     }
     
-    private void xhtmlParagraph(String text) throws SAXException {
+    private void xhtmlParagraph(XHTMLContentHandler fileXHTML, String text) throws SAXException {
     	fileXHTML.startElement("span");
         fileXHTML.characters(text);
         fileXHTML.endElement("span");
