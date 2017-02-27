@@ -8,11 +8,11 @@
   <packaging>jar</packaging>
   <name>OOXML XPS Parser for Apache Tika</name>
   <url>http://www.mydlp.com/blog/</url>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -41,5 +41,18 @@
       <version>1.6.6</version>
     </dependency>
   </dependencies>
-  
+
+  <distributionManagement>
+    <repository>
+      <id>archiva</id>
+      <name>Internal Release Repository</name>
+      <url>http://archiva.smarshdev.com:8081/repository/internal/</url>
+    </repository>
+    <snapshotRepository>
+      <id>archiva</id>
+      <name>Internal Snapshot Repository</name>
+      <url>http://archiva.smarshdev.com:8081/repository/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 </project>
